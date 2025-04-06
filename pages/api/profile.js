@@ -6,7 +6,7 @@ export default async function profleHandler(req, res) {
     if (req.method === "POST") {
         const body = await req.body;
         console.log("req body: ", body);
-        console.log("type of body: ", typeof(body));
+        // console.log("type of body: ", typeof(body));
         const accessToken = body["token"];
  
 

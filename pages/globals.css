@@ -1,4 +1,4 @@
-@import "tailwindcss";
+/* @import "tailwindcss";
 
 :root {
   --background: #4dcdf4;
@@ -17,7 +17,7 @@
     --background: #0a0a0a;
     --foreground: #ededed;
   }
-}
+} */
 
 body {
   /* background: var(--background); */
@@ -26,5 +26,70 @@ body {
   /* font-family: Arial, Helvetica, sans-serif; */
   font-family:'Courier New', Courier, monospace;
   color: black;
-  
+  margin: 10px;
+  padding: 10px; 
+}
+
+#homePage {
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; 
+  justify-content: center;
+  padding-bottom: 5px;
+}
+
+#profileInfo {
+  display: flex; 
+  flex-direction: row; 
+  padding: 5px;
+  gap: 5px;
+}
+
+#profileInfo img {
+  object-fit: cover;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+}
+
+#profileText {
+  display: flex;  
+  flex-direction: column; 
+}
+
+#profileText h1 {
+  padding: 10px; 
+}
+
+#profileText ul, .artistInfo ul {
+  /* padding: 10px;  */
+  padding-left: 10px;
+  list-style: none;
+  /* padding-inline-start: 0; */
+}
+
+#topArtists {
+  display: flex; 
+  flex-direction: column;
+  justify-content: left; 
+  align-content: flex-start; 
+  align-self: flex-start;
+  gap: 5px;
+}
+
+.artistInfo {
+  display: flex; 
+  flex-direction: row; 
+  justify-content: left;
+  flex: 0 0 100%; /* Let it fill the entire space horizontally */
+  padding-bottom: 10px;
+}
+
+.artistInfo img {
+  /* width: 200px;
+  height: 200px;  */
+  object-fit: cover;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%; 
 }
