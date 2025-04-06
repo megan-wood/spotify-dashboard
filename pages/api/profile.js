@@ -16,7 +16,7 @@ export default async function profleHandler(req, res) {
             method: "GET", headers: { Authorization: `Bearer ${accessToken}` }
         });
         let response = await result.json();
-        console.log("profile result: ", response);
+        // console.log("profile result: ", response);
         // }
         // return response;
         res.status(200).json({ message: 'Success', response });

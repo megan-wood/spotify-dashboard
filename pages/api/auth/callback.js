@@ -1,34 +1,51 @@
-import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
+// import { NextResponse } from "next/server";
+// import { cookies } from "next/headers";
+// import { useRouter } from "next/router"
 
 export default async function callbackHandler(req, res) {
     // const cookieStore = await cookies();
+    // const router = useRouter();
+    
+    console.log("req code: ", req.query); 
     const code = req.query.code;
     console.log("code: ", code); 
-    // console.log(`client id: ${process.env.CLIENT_ID}, client secret: ${process.env.CLIENT_SECRET}`);
-    let authURL = "https://accounts.spotify.com/api/token";
 
-    const params = new URLSearchParams();
-    params.append("grant_type", "authorization_code");
-    params.append("code", code); 
-    params.append("redirect_uri", "http://localhost:3000/api/auth/callback");
-    
-    const response = await fetch(authURL, {
+    const accessTokenData = await fetch("http://localhost:3000/api/get-api-token", {
         method: "POST", 
         headers: {
-            "Content-Type": "application/x-www-form-urlencoded", 
-            "Authorization": 'Basic ' + (new Buffer.from(process.env.CLIENT_ID + ':' + process.env.CLIENT_SECRET).toString('base64'))
-        },
-        body: params.toString(),
-    })
+            'Content-Type': 'application/json',
+        }, 
+        body: JSON.stringify({code})
+    });
 
-    const data = await response.json();
-    console.log("data:", data); 
+    const accessTokenJSON = await accessTokenData.json(); 
+    const access_token = accessTokenJSON["access_token"];
 
-    if (data.access_token) {
+    // console.log(`client id: ${process.env.CLIENT_ID}, client secret: ${process.env.CLIENT_SECRET}`);
+    // let authURL = "https://accounts.spotify.com/api/token";
+
+    // const params = new URLSearchParams();
+    // params.append("grant_type", "authorization_code");
+    // params.append("code", code); 
+    // params.append("redirect_uri", "http://localhost:3000/api/auth/callback");
+    
+    // const response = await fetch(authURL, {
+    //     method: "POST", 
+    //     headers: {
+    //         "Content-Type": "application/x-www-form-urlencoded", 
+    //         "Authorization": 'Basic ' + (new Buffer.from(process.env.CLIENT_ID + ':' + process.env.CLIENT_SECRET).toString('base64'))
+    //     },
+    //     body: params.toString(),
+    // })
+
+    // const data = await response.json();
+    // console.log("data:", data); 
+
+    // if (data.access_token) {
         // cookieStore.set("API token", data.access_token);
-        console.log("received access token: ", data.access_token); 
-        let url = `/homePage?access_token=${data.access_token}`;
+
+        console.log("received access token: ", access_token); 
+        let url = `/homePage?access_token=${access_token}`;
         console.log("URL callback: ", url);
 
         //added
@@ -38,19 +55,19 @@ export default async function callbackHandler(req, res) {
         // });
         // console.log("profile result: ", await result.json());
 
-        const params = new URLSearchParams();
-        params.append("token", data.access_token);
-        console.log("params: ", params.toString(), " json: ", JSON.stringify(params));
-        const response = await fetch(`http://localhost:3000/api/profile`, {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json',  // Set header for JSON content
-            },
-            body: JSON.stringify({"token": data.access_token}) // Send as JSON string
-        });//get/profile?token=${accessToken}`);
-        // console.log("data: ", response); 
-        const profileData = await response.json();
-        console.log("profile data: ", profileData); 
+        // const params = new URLSearchParams();
+        // params.append("token", access_token);
+        // console.log("params: ", params.toString(), " json: ", JSON.stringify(params));
+        // const response = await fetch(`http://localhost:3000/api/profile`, {
+        //     method: "POST",
+        //     headers: {
+        //         'Content-Type': 'application/json',  // Set header for JSON content
+        //     },
+        //     body: JSON.stringify({"token": access_token}) // Send as JSON string
+        // });//get/profile?token=${accessToken}`);
+        // // // console.log("data: ", response); 
+        // const profileData = await response.json();
+        // console.log("profile data: ", profileData); 
         // // return await result.json();
         // //ends
         // const topItemsParams = new URLSearchParams();
@@ -66,11 +83,15 @@ export default async function callbackHandler(req, res) {
         // console.log("top items response:", topItemsJSON); 
         // console.log("followers of 0: ", topItemsJSON["followers"]);
 
+        // router.push({
+        //     pathname: "/", 
+        //     query: { profile: JSON.stringify(profileData)}
+        // });
         res.redirect(url);
         // console.log(`URL: ${(new URL(url)).toString()}`);
         // return NextResponse.redirect(new URL(url));
-    } else {
-        res.status(400).json({error: "Failed to get token from Spotify, response from them: ", data});
-    }
+    // } else {
+    //     res.status(400).json({error: "Failed to get token from Spotify, response from them: ", data});
+    // }
 }
 
