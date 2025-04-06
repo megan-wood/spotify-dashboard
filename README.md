@@ -1,3 +1,6 @@
+# Spotify Dashboard
+Everyone loves Spotify Wrapped, but what if you wanted to see your listening trends more often than once per year? And what if you wanted to see more than just the Top 5 artists or tracks you've listened to? This website can do that!
+
 Current view of Home Page after a person has signed in:
 ![alt text](readmeImages/image-1.png)
 
