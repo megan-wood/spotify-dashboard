@@ -1,5 +1,6 @@
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import avatar from "../public/avatar.jpg";
 import "./globals.css";
 
@@ -86,32 +87,42 @@ export default  function HomePage() {
     console.log("artists: ", topArtists);
     console.log("list items: ", listItems); 
         return (
-            <section id="homePage">
-                <div id="profileInfo">
-                    <ProfileImage profile={profile}/>
-                    <div id="profileText">
-                        <h1>Hello {profile.display_name}</h1>
-                        {/* <ul>
-                            <li>Email: {profile.email}</li>
-                        </ul> */}
+            <div>
+                <nav style={{paddingBottom:"10px", paddingTop:"10px",backgroundColor: "#f0f0f0" }}>
+                    <ul style={{display: "flex", gap: "1rem", listStyle: "none" }}>
+                    <li><Link href="/">Home</Link></li>
+                    <li><Link href="/about">About</Link></li>
+                    <li><Link href="/profile">Profile</Link></li>
+                    </ul>
+                </nav>
+                <section id="homePage">
+                    <div id="profileInfo">
+                        <ProfileImage profile={profile}/>
+                        <div id="profileText">
+                            <h1>Hello {profile.display_name}</h1>
+                            {/* <ul>
+                                <li>Email: {profile.email}</li>
+                            </ul> */}
+                        </div>
                     </div>
-                </div>
-                {/* <ul>
-                    {topArtists.map((artist, index) => (
-                    <li key={index}>{artist}</li> // Use the index or unique id as the key
-                    ))}
-                </ul> */}
-                <div id="topArtists">
-                    {/* <p>First artist: {topArtists[0].name}</p>
-                    <p>Second artist: {topArtists[1].name}</p>
-                    <p>Third artist: {topArtists[2].name}</p>  */}
-                    {/* <ul>{listItems}</ul> */}
-                    <ArtistsList artists={topArtists}/>
-                </div>
+                    {/* <ul>
+                        {topArtists.map((artist, index) => (
+                        <li key={index}>{artist}</li> // Use the index or unique id as the key
+                        ))}
+                    </ul> */}
+                    <h3 class="heading3">Your top 10 artists for the last 6 months are: </h3>
+                    <div id="topArtists">
+                        {/* <p>First artist: {topArtists[0].name}</p>
+                        <p>Second artist: {topArtists[1].name}</p>
+                        <p>Third artist: {topArtists[2].name}</p>  */}
+                        {/* <ul>{listItems}</ul> */}
+                        <ArtistsList artists={topArtists}/>
+                    </div>
 
-                
-                {/* <p>Email: {profile}</p> */}
-            </section>
+                    
+                    {/* <p>Email: {profile}</p> */}
+                </section>
+            </div>
         );
     }
     
@@ -207,13 +218,14 @@ function ArtistsList({artists}) {
     //     </ul>
     // );
         <div>
-            
                 {artists.map((artist, index) => (
                     <div class="artistInfo">
                         <img src={artist.images[0].url} alt="artist image"/>
-                        <ul>
-                            <li key={index}>{artist.name}</li>
-                        </ul>
+                        <div class="artistName">
+                            <ul>
+                                <li key={index}>{artist.name}</li>
+                            </ul>
+                        </div>
                     </div>
                 ))}
         </div>

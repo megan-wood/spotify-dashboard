@@ -24,10 +24,24 @@ body {
   /* color: var(--foreground); */
   /* color: blue; */
   /* font-family: Arial, Helvetica, sans-serif; */
-  font-family:'Courier New', Courier, monospace;
+  font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  /* font-family:'Courier New', Courier, monospace; */
   color: black;
-  margin: 10px;
-  padding: 10px; 
+  margin: 0px;
+  padding: 0px; 
+}
+
+nav {
+  padding: 0px; 
+  margin: 0px;
+  box-shadow: 0 2px 4px 0 rgba(0,0,0,.2);
+  display: flex; 
+  justify-content: space-between;
+  align-items: center;
+  max-width: 100%;
+  background-color: rgb(8, 50, 99);
+  color: lightblue;
+  position: sticky;
 }
 
 #homePage {
@@ -36,6 +50,7 @@ body {
   align-items: center; 
   justify-content: center;
   padding-bottom: 5px;
+  padding-top: 5px;
 }
 
 #profileInfo {
@@ -68,6 +83,13 @@ body {
   /* padding-inline-start: 0; */
 }
 
+.heading3 {
+  display: flex; 
+  align-self: flex-start;
+  text-align: left; 
+  padding-left: 10px;
+}
+
 #topArtists {
   display: flex; 
   flex-direction: column;
@@ -75,14 +97,19 @@ body {
   align-content: flex-start; 
   align-self: flex-start;
   gap: 5px;
+  padding-left: 10px;
+  flex-basis: 500px; /* Let it fill the entire space horizontally */
 }
 
 .artistInfo {
   display: flex; 
   flex-direction: row; 
   justify-content: left;
-  flex: 0 0 100%; /* Let it fill the entire space horizontally */
+  /* flex: 0 0 100%; Let it fill the entire space horizontally */
   padding-bottom: 10px;
+  gap: 10px;
+  width: 500px; /* Let it fill the entire space horizontally */
+
 }
 
 .artistInfo img {
@@ -92,4 +119,11 @@ body {
   width: 200px;
   height: 200px;
   border-radius: 50%; 
+}
+
+.artistName {
+  display: flex; 
+  flex-direction: column;
+  justify-content: center; 
+
 }
