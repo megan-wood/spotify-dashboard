@@ -1,8 +1,9 @@
 export default async function GetTopArtists(req, res) {
     // const type = params.type; 
-    const body = await req.body; 
-    const accessToken = body.token;
-    console.log("top artists query: ", body); 
+    // const body = await req.body; 
+    const { accessToken } = req.query;
+    // const accessToken = body.token;
+    // console.log("top artists query: ", body); 
     console.log("access token top: ", accessToken);
 
     let url = `https://api.spotify.com/v1/me/top/artists` + "?";

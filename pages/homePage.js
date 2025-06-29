@@ -8,7 +8,11 @@ export default  function HomePage() {
     const router = useRouter();
     const [profile, setProfile] = useState(null);
     const [topArtists, setTopArtists] = useState(null);
-    // const [loading, setLoading] = useState(true); // optional, for UX
+    const [topArtistsFormData, setTopArtistsFormData] = useState({
+        time_range: "", 
+        num_artists: 0, 
+    });
+    const [loading, setLoading] = useState(false); // state to manage loading status while fetching data
     let profileInfo; 
     // let profile;
 
@@ -18,13 +22,16 @@ export default  function HomePage() {
     //     return <div>Loading...</div>;  // Or any loading state
     // }
     // console.log("is router ready: ", router.isReady);
+    const accessToken = router.query["access_token"];
+
     useEffect(() => {
         if (!router.isReady) {
+            console.log("router is not ready"); 
             return; 
         }
         console.log("router query:", router.query);
         console.log("type of query: ", typeof(router.query));
-        const accessToken = router.query["access_token"];
+        // const accessToken = router.query["access_token"];
         console.log("access token: ", accessToken);
         if (!accessToken) {
             console.log("no access token");
@@ -45,9 +52,9 @@ export default  function HomePage() {
             topArtistsInfo = await getTopArtists(accessToken, setTopArtists); 
             console.log("top artists info: ", topArtistsInfo); 
         };
-        runGetTopArtist();
+        // runGetTopArtist();
 
-        console.log("top artists info: ", topArtistsInfo); 
+        // console.log("top artists info: ", topArtistsInfo); 
 
 
         // <Link href="/user/[id]" as={`/user/${user.id}`}></Link>
@@ -67,25 +74,49 @@ export default  function HomePage() {
         // const data = await response.json();
         // console.log("data: ", data); 
         // getProfile(accessToken);
-    }, [router.isReady, router.query.access_token]);
-    // if (loading || !profile) return <div>Loading profile...</div>;
-    if (!profile) {
-        return (
-            <div>
-                <p>No profile info</p>
-            </div>
-        );
-    }
-    let listItems;
-    if (!topArtists) {
-        return (
-            <div>
-                <p>No top artists info.</p>
-            </div>
-        )
-    }
-    console.log("artists: ", topArtists);
-    console.log("list items: ", listItems); 
+        }, [router.isReady, router.query.access_token]);
+        // if (loading || !profile) return <div>Loading profile...</div>;
+        if (!profile) {
+            return (
+                <div>
+                    <p>No profile info</p>
+                </div>
+            );
+        }
+        let listItems;
+    // if (!topArtists) {
+    //     return (
+    //         <div>
+    //             <p>No top artists info.</p>
+    //         </div>
+    //     )
+    // }
+        console.log("artists: ", topArtists);
+        console.log("list items: ", listItems); 
+
+        async function onSubmitTopArtists(event) {
+            event.preventDefault();
+            console.log("event", event); 
+            console.log("event target: ", event.target);
+            const formData = new FormData(event.target);
+            // console.log("form data: ", formData); 
+
+            const formObject = Object.fromEntries(formData.entries());
+            console.log(formObject);
+            console.log("submit access token: ", accessToken);
+            console.log(formObject.timeRange);
+            const response = await fetch(`http://localhost:3000/api/submitPreferences?token=${accessToken}`, {
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                method: "POST", 
+                body:  JSON.stringify(formObject),
+            });
+            const reqTopArtists = await response.json();
+            console.log("req top artists: ", reqTopArtists);
+            setTopArtists(reqTopArtists);
+        }
+
         return (
             <div>
                 <nav style={{paddingBottom:"10px", paddingTop:"10px",backgroundColor: "#f0f0f0" }}>
@@ -110,13 +141,30 @@ export default  function HomePage() {
                         <li key={index}>{artist}</li> // Use the index or unique id as the key
                         ))}
                     </ul> */}
-                    <h3 class="heading3">Your top 10 artists for the last 6 months are: </h3>
+                    <section className="trendPreferences">
+                        <form onSubmit={onSubmitTopArtists}>
+                            <label htmlFor="top-artist-select">Choose the time frame for your listening trends: </label>
+                            <br></br>
+                            <select name="timeRange" id="timeRangeSelect">
+                                    <option value="">--Please choose an option--</option>
+                                    <option value="oneMonth">1 Month</option>
+                                    <option value="sixMonths">6 Months</option>
+                                    <option value="oneYear">1 Year</option>
+                            </select> 
+                            <br></br>
+                            <label htmlFor="numArtists">Enter the number of artists to show.</label>
+                            <br></br>
+                            <input type="text" name="numArtists" />
+                            <button type="submit">Submit</button>
+                        </form>
+                    </section>
+                    <h3 className="heading3">Your top 10 artists for the last 6 months are: </h3>
                     <div id="topArtists">
                         {/* <p>First artist: {topArtists[0].name}</p>
                         <p>Second artist: {topArtists[1].name}</p>
                         <p>Third artist: {topArtists[2].name}</p>  */}
                         {/* <ul>{listItems}</ul> */}
-                        <ArtistsList artists={topArtists}/>
+                        {topArtists && <ArtistsList artists={topArtists}/>}
                     </div>
 
                     
@@ -182,15 +230,15 @@ function ProfileImage({profile}) {
 }
 
 async function getTopArtists(accessToken, setTopArtists) {
-    const params = new URLSearchParams();
-    params.append("token", accessToken);
+    // const params = new URLSearchParams();
+    // params.append("token", accessToken);
     console.log("top artists token:", accessToken);
-    const response = await fetch(`http://localhost:3000/api/get-top-artists`, {
-        method: "POST",
+    const response = await fetch(`http://localhost:3000/api/get-top-artists?accessToken=${accessToken}`, {
+        method: "GET",
         headers: {
             'Content-Type': 'application/json',  // Set header for JSON content
         },
-        body: JSON.stringify({"token": accessToken})
+        // body: JSON.stringify({"token": accessToken})
     });
 
     const topArtists = await response.json();
@@ -202,6 +250,7 @@ async function getTopArtists(accessToken, setTopArtists) {
 }
 
 function ArtistsList({artists}) {
+    console.log("artists in function: ", artists);
     return (
         // <ul>
         //     {artists.map((artist, index) => (
@@ -219,11 +268,11 @@ function ArtistsList({artists}) {
     // );
         <div>
                 {artists.map((artist, index) => (
-                    <div class="artistInfo">
+                    <div className="artistInfo" key={index}>
                         <img src={artist.images[0].url} alt="artist image"/>
-                        <div class="artistName">
+                        <div className="artistName">
                             <ul>
-                                <li key={index}>{artist.name}</li>
+                                <li>{artist.name}</li>
                             </ul>
                         </div>
                     </div>

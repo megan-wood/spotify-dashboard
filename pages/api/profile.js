@@ -5,12 +5,12 @@ export default async function profleHandler(req, res) {
     // const slug = params.slug;
     if (req.method === "POST") {
         const body = await req.body;
-        console.log("req body: ", body);
+        // console.log("req body: ", body);
         // console.log("type of body: ", typeof(body));
         const accessToken = body["token"];
  
 
-        console.log("route access token: ", accessToken);
+        // console.log("route access token: ", accessToken);
 
         const result = await fetch("https://api.spotify.com/v1/me", {
             method: "GET", headers: { Authorization: `Bearer ${accessToken}` }
