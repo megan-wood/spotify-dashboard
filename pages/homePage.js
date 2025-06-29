@@ -52,7 +52,7 @@ export default  function HomePage() {
             topArtistsInfo = await getTopArtists(accessToken, setTopArtists); 
             console.log("top artists info: ", topArtistsInfo); 
         };
-        // runGetTopArtist();
+        runGetTopArtist();
 
         // console.log("top artists info: ", topArtistsInfo); 
 
@@ -113,8 +113,8 @@ export default  function HomePage() {
                 body:  JSON.stringify(formObject),
             });
             const reqTopArtists = await response.json();
-            console.log("req top artists: ", reqTopArtists);
-            setTopArtists(reqTopArtists);
+            console.log("req top artists: ", reqTopArtists.artists);
+            setTopArtists(reqTopArtists.artists);
         }
 
         return (
@@ -244,7 +244,8 @@ async function getTopArtists(accessToken, setTopArtists) {
     const topArtists = await response.json();
     const items = topArtists.data.items;
     console.log("items: ", items);  
-    setTopArtists(items); 
+    // setTopArtists(items.artists); 
+    setTopArtists(items);
     // console.log("top artists fun: ", ); 
     return items; 
 }

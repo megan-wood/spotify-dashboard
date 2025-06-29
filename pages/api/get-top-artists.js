@@ -1,17 +1,20 @@
 export default async function GetTopArtists(req, res) {
     // const type = params.type; 
-    // const body = await req.body; 
-    const { accessToken } = req.query;
+    const body = await req.body; 
+    console.log("pref body: ", body);
+    const timeRange = convertTimeRange(body.timeRange);
+    const numArtists = body.numArtists;
+    const accessToken = req.query.token;
     // const accessToken = body.token;
     // console.log("top artists query: ", body); 
-    console.log("access token top: ", accessToken);
+    console.log("accesstoken top: ", accessToken);
 
     let url = `https://api.spotify.com/v1/me/top/artists` + "?";
 
     // if (type === "artists") {
         const params = new URLSearchParams();
-        params.append("time_range", "medium_term");
-        params.append("limit", 10);
+        params.append("time_range", timeRange);
+        params.append("limit", numArtists);
         params.append("offset", 0); 
 
         url += params.toString();
@@ -38,4 +41,13 @@ export default async function GetTopArtists(req, res) {
 
     // }
 
+}
+
+function convertTimeRange(timeRange) {
+    if (timeRange === "oneYear") {
+        return "long_term";
+    } else if (timeRange == "sixMonths") {
+        return "medium_term";
+    }
+    return "short_term";
 }
