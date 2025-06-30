@@ -9,10 +9,12 @@ export default  function HomePage() {
     const [profile, setProfile] = useState(null);
     const [topArtists, setTopArtists] = useState(null);
     const [topArtistsFormData, setTopArtistsFormData] = useState({
-        time_range: "", 
-        num_artists: 0, 
+        timeRange: "", 
+        numArtists: "", 
     });
     const [loading, setLoading] = useState(false); // state to manage loading status while fetching data
+    const [isSubmitted, setIsSubmitted] = useState(false); 
+
     let profileInfo; 
     // let profile;
 
@@ -47,12 +49,12 @@ export default  function HomePage() {
         runGetProfile(); 
         console.log("profile: ", profileInfo); 
 
-        let topArtistsInfo; 
-        const runGetTopArtist = async () => {
-            topArtistsInfo = await getTopArtists(accessToken, setTopArtists); 
-            console.log("top artists info: ", topArtistsInfo); 
-        };
-        runGetTopArtist();
+        // let topArtistsInfo; 
+        // const runGetTopArtist = async () => {
+        //     topArtistsInfo = await getTopArtists(accessToken, setTopArtists); 
+        //     console.log("top artists info: ", topArtistsInfo); 
+        // };
+        // runGetTopArtist();
 
         // console.log("top artists info: ", topArtistsInfo); 
 
@@ -105,6 +107,8 @@ export default  function HomePage() {
             console.log(formObject);
             console.log("submit access token: ", accessToken);
             console.log(formObject.timeRange);
+            setTopArtistsFormData(formObject);
+
             const response = await fetch(`http://localhost:3000/api/submitPreferences?token=${accessToken}`, {
                 headers: {
                     "Content-Type": "application/json"
@@ -115,6 +119,16 @@ export default  function HomePage() {
             const reqTopArtists = await response.json();
             console.log("req top artists: ", reqTopArtists.artists);
             setTopArtists(reqTopArtists.artists);
+            setIsSubmitted(true);
+        }
+
+        function convertRange(timeRange) {
+            if (timeRange === "oneYear") {
+                return "year";
+            } else if (timeRange === "sixMonths") {
+                return "6 months"; 
+            }
+            return "month";
         }
 
         return (
@@ -158,7 +172,8 @@ export default  function HomePage() {
                             <button type="submit">Submit</button>
                         </form>
                     </section>
-                    <h3 className="heading3">Your top 10 artists for the last 6 months are: </h3>
+                    {/* {isSubmitted && <h3 className="heading3">Your top {topArtistsFormData.num_artists} artists for the last 6 months are: </h3>} */}
+                    {isSubmitted && <h3 className="heading3">Your top {topArtistsFormData.numArtists} artists for the last {convertRange(topArtistsFormData.timeRange)} are: </h3>}
                     <div id="topArtists">
                         {/* <p>First artist: {topArtists[0].name}</p>
                         <p>Second artist: {topArtists[1].name}</p>
