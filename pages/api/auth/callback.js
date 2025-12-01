@@ -21,6 +21,11 @@ export default async function callbackHandler(req, res) {
     const accessTokenJSON = await accessTokenData.json(); 
     const access_token = accessTokenJSON["access_token"];
 
+    console.log("received access token: ", access_token); 
+    let url = `/homePage?access_token=${access_token}`;
+    console.log("URL callback: ", url);
+    res.redirect(url);
+
     // console.log(`client id: ${process.env.CLIENT_ID}, client secret: ${process.env.CLIENT_SECRET}`);
     // let authURL = "https://accounts.spotify.com/api/token";
 
@@ -44,9 +49,11 @@ export default async function callbackHandler(req, res) {
     // if (data.access_token) {
         // cookieStore.set("API token", data.access_token);
 
-        console.log("received access token: ", access_token); 
+        /*c
+        onsole.log("received access token: ", access_token); 
         let url = `/homePage?access_token=${access_token}`;
         console.log("URL callback: ", url);
+        */
 
         //added
         // console.log("token:", data.access_token); 
@@ -87,7 +94,11 @@ export default async function callbackHandler(req, res) {
         //     pathname: "/", 
         //     query: { profile: JSON.stringify(profileData)}
         // });
+
+        /*
         res.redirect(url);
+        */
+
         // console.log(`URL: ${(new URL(url)).toString()}`);
         // return NextResponse.redirect(new URL(url));
     // } else {

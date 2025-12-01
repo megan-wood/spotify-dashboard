@@ -2,10 +2,12 @@ import { useRouter } from "next/router"
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import avatar from "../public/avatar.jpg";
-import "./globals.css";
+// import "./globals.css";
 
 export default  function HomePage() {
     const router = useRouter();
+    const accessToken = router.query["access_token"];
+    // console.log("access token right after router made: ", accessToken);
     const [profile, setProfile] = useState(null);
     const [topArtists, setTopArtists] = useState(null);
     const [topArtistsFormData, setTopArtistsFormData] = useState({
@@ -15,7 +17,7 @@ export default  function HomePage() {
     const [loading, setLoading] = useState(false); // state to manage loading status while fetching data
     const [isSubmitted, setIsSubmitted] = useState(false); 
 
-    let profileInfo; 
+    // let profileInfo; 
     // let profile;
 
     // console.log("is router ready: ", router.isReady);
@@ -24,30 +26,40 @@ export default  function HomePage() {
     //     return <div>Loading...</div>;  // Or any loading state
     // }
     // console.log("is router ready: ", router.isReady);
-    const accessToken = router.query["access_token"];
+    // const accessToken = router.query["access_token"];
 
     useEffect(() => {
+        // const accessToken = router.query.access_token;
+        // console.log("access token inside effect:", accessToken);
+
         if (!router.isReady) {
             console.log("router is not ready"); 
             return; 
         }
         console.log("router query:", router.query);
-        console.log("type of query: ", typeof(router.query));
+        // console.log("type of query: ", typeof(router.query));
         // const accessToken = router.query["access_token"];
-        console.log("access token: ", accessToken);
+        // console.log("access token: ", accessToken);
         if (!accessToken) {
             console.log("no access token");
             return;
         }
-        const runGetProfile = async () => {
-            profileInfo = await getProfile(accessToken, setProfile);
-            console.log("profile: ", profileInfo);
-            // if (profileInfo) {
-            //     setProfile(profileInfo);
-            // } 
-        };
-        runGetProfile(); 
-        console.log("profile: ", profileInfo); 
+
+        async function loadProfile() {
+            await getProfile(accessToken, setProfile); 
+        }
+        // const runGetProfile = async () => {
+        //     profileInfo = await getProfile(accessToken, setProfile);
+        //     console.log("profile: ", profileInfo);
+        //     // if (profileInfo) {
+        //     //     setProfile(profileInfo);
+        //     // } 
+        // };
+        // runGetProfile(); 
+        loadProfile();
+        // console.log("profile: ", profileInfo); 
+    }, [router.isReady, router.query.access_token]);
+
 
         // let topArtistsInfo; 
         // const runGetTopArtist = async () => {
@@ -76,7 +88,7 @@ export default  function HomePage() {
         // const data = await response.json();
         // console.log("data: ", data); 
         // getProfile(accessToken);
-        }, [router.isReady, router.query.access_token]);
+        // }, [router.isReady, router.query.access_token]);
         // if (loading || !profile) return <div>Loading profile...</div>;
         if (!profile) {
             return (
@@ -211,7 +223,7 @@ async function getProfile(accessToken, setProfile) {
     const params = new URLSearchParams();
     params.append("token", accessToken);
     // console.log("params: ", params.toString(), " json: ", JSON.stringify(params));
-    const response = await fetch(`http://localhost:3000/api/profile`, {
+    const response = await fetch(`/api/profile`, {
         method: "POST",
         headers: {
             'Content-Type': 'application/json',  // Set header for JSON content
@@ -219,9 +231,9 @@ async function getProfile(accessToken, setProfile) {
         body: JSON.stringify({"token": accessToken})
     //     // body: params.toString()  // Send as JSON string
     });
-    console.log("data: ", response); 
+    // console.log("data: ", response); 
     const data = await response.json();
-    console.log("data: ", data); 
+    // console.log("data: ", data); 
     const profile = data.response; 
     setProfile(profile);
     console.log("profile: ", profile); 
@@ -248,7 +260,7 @@ async function getTopArtists(accessToken, setTopArtists) {
     // const params = new URLSearchParams();
     // params.append("token", accessToken);
     console.log("top artists token:", accessToken);
-    const response = await fetch(`http://localhost:3000/api/get-top-artists?accessToken=${accessToken}`, {
+    const response = await fetch(`/api/get-top-artists?accessToken=${accessToken}`, {
         method: "GET",
         headers: {
             'Content-Type': 'application/json',  // Set header for JSON content

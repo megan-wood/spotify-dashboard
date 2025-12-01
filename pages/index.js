@@ -3,6 +3,8 @@ import { useState } from 'react';
 
 // require('dotenv').config();
 const CLIENTID = process.env.NEXT_PUBLIC_CLIENT_ID;
+const REDIRECTURI = process.env.NEXT_PUBLIC_REDIRECT_URI;
+console.log("redirect uri: ", REDIRECTURI);
 
 export default function LoginPage() {
   return (
@@ -12,8 +14,7 @@ export default function LoginPage() {
       <body>
         <p>hi</p>
         {/* <p>Client id: {CLIENTID}</p> */}
-        {/* <SpotifyLoginButton clientID="ee62fcea57cf4a80a27f1825d597349f" redirectURL="http://localhost:3000/api/auth/callback" scopes={["user-read-email", "user-read-private", "playlist-modify-public", "playlist-modify-private", "user-top-read"]} /> */}
-        <SpotifyLoginButton clientID={CLIENTID} redirectURL="http://localhost:3000/api/auth/callback" scopes={["user-read-email", "user-read-private", "playlist-modify-public", "playlist-modify-private", "user-top-read"]} />
+        <SpotifyLoginButton clientID={CLIENTID} redirectURL={REDIRECTURI} scopes={["user-read-email", "user-read-private", "playlist-modify-public", "playlist-modify-private", "user-top-read"]} />
       </body>
     </section>
   );

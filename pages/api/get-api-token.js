@@ -6,7 +6,7 @@ export default async function GetAPIToken(req, res) {
     const params = new URLSearchParams();
     params.append("grant_type", "authorization_code");
     params.append("code", code); 
-    params.append("redirect_uri", "http://localhost:3000/api/auth/callback");
+    params.append("redirect_uri", "http://127.0.0.1:3000/api/auth/callback");
     
     const response = await fetch(authURL, {
         method: "POST", 
