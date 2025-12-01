@@ -14,8 +14,14 @@ export default  function HomePage() {
         timeRange: "", 
         numArtists: "", 
     });
+    const [isArtistsSubmitted, setIsArtistsSubmitted] = useState(false); 
+    const [topSongs, setTopSongs] = useState(null);
+    const [topSongsFormData, setTopSongsFormData] = useState({
+        timeRange: "",
+        numSongs: ""
+    });
+    const [isSongsSubmitted, setIsSongsSubmitted] = useState(false); 
     const [loading, setLoading] = useState(false); // state to manage loading status while fetching data
-    const [isSubmitted, setIsSubmitted] = useState(false); 
 
     // let profileInfo; 
     // let profile;
@@ -85,7 +91,7 @@ export default  function HomePage() {
             console.log(formObject.timeRange);
             setTopArtistsFormData(formObject);
 
-            const response = await fetch(`/api/submitPreferences?token=${accessToken}`, {
+            const response = await fetch(`/api/submitPreferences?token=${accessToken}&type=artists`, {
                 headers: {
                     "Content-Type": "application/json"
                 },
@@ -95,7 +101,27 @@ export default  function HomePage() {
             const reqTopArtists = await response.json();
             console.log("req top artists: ", reqTopArtists.artists);
             setTopArtists(reqTopArtists.artists);
-            setIsSubmitted(true);
+            setIsArtistsSubmitted(true);
+        }
+
+        async function onSubmitTopSongs(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target); 
+
+            const formObject = Object.fromEntries(formData.entries());
+            console.log("form object: ", formObject);
+            setTopSongsFormData(formObject); 
+
+            const response = await fetch(`/api/submitPreferences?token=${accessToken}&type=tracks`, {
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                method: "POST", 
+                body: JSON.stringify(formObject)
+            });
+            const reqTopSongs = await response.json();
+            console.log("req top songs: ", reqTopSongs.songs);
+            setTopSongs(reqTopSongs.songs); 
         }
 
         function convertRange(timeRange) {
@@ -136,10 +162,10 @@ export default  function HomePage() {
                             <label htmlFor="top-artist-select">Choose the time frame for your listening trends: </label>
                             <br></br>
                             <select name="timeRange" id="timeRangeSelect">
-                                    <option value="">--Please choose an option--</option>
-                                    <option value="oneMonth">1 Month</option>
-                                    <option value="sixMonths">6 Months</option>
-                                    <option value="oneYear">1 Year</option>
+                                <option value="">--Please choose an option--</option>
+                                <option value="oneMonth">1 Month</option>
+                                <option value="sixMonths">6 Months</option>
+                                <option value="oneYear">1 Year</option>
                             </select> 
                             <br></br>
                             <label htmlFor="numArtists">Enter the number of artists to show.</label>
@@ -147,15 +173,35 @@ export default  function HomePage() {
                             <input type="text" name="numArtists" />
                             <button type="submit">Submit</button>
                         </form>
+                        <br></br>
+                        <form onSubmit={onSubmitTopSongs}>
+                            <label htmlFor="top-songs-select">Choose the time frame for your top songs: </label>
+                            <br></br>
+                            <select name="timeRange" id="timeRangeSelect">
+                                <option value="">--Please choose an option--</option>
+                                <option value="oneMonth">1 Month</option>
+                                <option value="sixMonths">6 Months</option>
+                                <option value="oneYear">1 Year</option>
+                            </select> 
+                            <br></br>
+                            <label htmlFor="numArtists">Enter the number of songs to show.</label>
+                            <br></br>
+                            <input type="text" name="numArtists" />
+                            <button type="submit">Submit</button>
+                        </form>
                     </section>
                     {/* {isSubmitted && <h3 className="heading3">Your top {topArtistsFormData.num_artists} artists for the last 6 months are: </h3>} */}
-                    {isSubmitted && <h3 className="heading3">Your top {topArtistsFormData.numArtists} artists for the last {convertRange(topArtistsFormData.timeRange)} are: </h3>}
+                    {isArtistsSubmitted && <h3 className="heading3">Your top {topArtistsFormData.numArtists} artists for the last {convertRange(topArtistsFormData.timeRange)} are: </h3>}
                     <div id="topArtists">
                         {/* <p>First artist: {topArtists[0].name}</p>
                         <p>Second artist: {topArtists[1].name}</p>
                         <p>Third artist: {topArtists[2].name}</p>  */}
                         {/* <ul>{listItems}</ul> */}
                         {topArtists && <ArtistsList artists={topArtists}/>}
+                    </div>
+                    <div id="topSongs">
+                        {isSongsSubmitted && <h3 className="heading3">Your top {topSongsFormData.numArtists} artists for the last {convertRange(topSongsFormData.timeRange)} are: </h3>}
+                        {topSongs && <SongsList songs={topSongs}/>}
                     </div>
 
                     
@@ -220,26 +266,26 @@ function ProfileImage({profile}) {
     );
 }
 
-async function getTopArtists(accessToken, setTopArtists) {
-    // const params = new URLSearchParams();
-    // params.append("token", accessToken);
-    console.log("top artists token:", accessToken);
-    const response = await fetch(`/api/get-top-artists?accessToken=${accessToken}`, {
-        method: "GET",
-        headers: {
-            'Content-Type': 'application/json',  // Set header for JSON content
-        },
-        // body: JSON.stringify({"token": accessToken})
-    });
+// async function getTopArtists(accessToken, setTopArtists) {
+//     // const params = new URLSearchParams();
+//     // params.append("token", accessToken);
+//     console.log("top artists token:", accessToken);
+//     const response = await fetch(`/api/get-top-artists?accessToken=${accessToken}`, {
+//         method: "GET",
+//         headers: {
+//             'Content-Type': 'application/json',  // Set header for JSON content
+//         },
+//         // body: JSON.stringify({"token": accessToken})
+//     });
 
-    const topArtists = await response.json();
-    const items = topArtists.data.items;
-    console.log("items: ", items);  
-    // setTopArtists(items.artists); 
-    setTopArtists(items);
-    // console.log("top artists fun: ", ); 
-    return items; 
-}
+//     const topArtists = await response.json();
+//     const items = topArtists.data.items;
+//     console.log("items: ", items);  
+//     // setTopArtists(items.artists); 
+//     setTopArtists(items);
+//     // console.log("top artists fun: ", ); 
+//     return items; 
+// }
 
 function ArtistsList({artists}) {
     console.log("artists in function: ", artists);
@@ -269,6 +315,24 @@ function ArtistsList({artists}) {
                         </div>
                     </div>
                 ))}
+        </div>
+    );
+}
+
+function SongsList({songs}) {
+    console.log("songs in function: ", songs);
+    return (
+        <div>
+            {songs.map((song, index) => (
+                <div className="songInfo" key={index}>
+                    <img src={song.album.images[0].url} alt="song image"/>
+                    <div className="songName">
+                        <ul>
+                            <li>{song.name}</li>
+                        </ul>
+                    </div>
+                </div>
+            ))}
         </div>
     );
 }

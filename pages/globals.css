@@ -76,7 +76,7 @@ nav {
   padding: 10px; 
 }
 
-#profileText ul, .artistInfo ul {
+#profileText ul, .artistInfo ul, .songInfo ul {
   /* padding: 10px;  */
   padding-left: 10px;
   list-style: none;
@@ -90,7 +90,7 @@ nav {
   padding-left: 10px;
 }
 
-#topArtists {
+#topArtists, #topSongs {
   display: flex; 
   flex-direction: column;
   justify-content: left; 
@@ -101,7 +101,7 @@ nav {
   flex-basis: 500px; /* Let it fill the entire space horizontally */
 }
 
-.artistInfo {
+.artistInfo, .songInfo {
   display: flex; 
   flex-direction: row; 
   justify-content: left;
@@ -112,7 +112,7 @@ nav {
 
 }
 
-.artistInfo img {
+.artistInfo img, .songInfo img {
   /* width: 200px;
   height: 200px;  */
   object-fit: cover;
@@ -121,7 +121,7 @@ nav {
   border-radius: 50%; 
 }
 
-.artistName {
+.artistName, .songName {
   display: flex; 
   flex-direction: column;
   justify-content: center; 
