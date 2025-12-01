@@ -60,36 +60,6 @@ export default  function HomePage() {
         // console.log("profile: ", profileInfo); 
     }, [router.isReady, router.query.access_token]);
 
-
-        // let topArtistsInfo; 
-        // const runGetTopArtist = async () => {
-        //     topArtistsInfo = await getTopArtists(accessToken, setTopArtists); 
-        //     console.log("top artists info: ", topArtistsInfo); 
-        // };
-        // runGetTopArtist();
-
-        // console.log("top artists info: ", topArtistsInfo); 
-
-
-        // <Link href="/user/[id]" as={`/user/${user.id}`}></Link>
-        // console.log(`url: http://localhost:3000/api/profile?token=${accessToken}`);
-        // const params = new URLSearchParams();
-        // params.append("token", accessToken);
-        // // console.log("params: ", params.toString(), " json: ", JSON.stringify(params));
-        // const response = await fetch(`http://localhost:3000/api/profile`, {
-        //     method: "POST",
-        //     headers: {
-        //         'Content-Type': 'application/json',  // Set header for JSON content
-        //     },
-        //     body: JSON.stringify({"token": accessToken})
-        // //     // body: params.toString()  // Send as JSON string
-        // });//get/profile?token=${accessToken}`);
-        // console.log("data: ", response); 
-        // const data = await response.json();
-        // console.log("data: ", data); 
-        // getProfile(accessToken);
-        // }, [router.isReady, router.query.access_token]);
-        // if (loading || !profile) return <div>Loading profile...</div>;
         if (!profile) {
             return (
                 <div>
@@ -98,13 +68,7 @@ export default  function HomePage() {
             );
         }
         let listItems;
-    // if (!topArtists) {
-    //     return (
-    //         <div>
-    //             <p>No top artists info.</p>
-    //         </div>
-    //     )
-    // }
+
         console.log("artists: ", topArtists);
         console.log("list items: ", listItems); 
 
@@ -121,7 +85,7 @@ export default  function HomePage() {
             console.log(formObject.timeRange);
             setTopArtistsFormData(formObject);
 
-            const response = await fetch(`http://localhost:3000/api/submitPreferences?token=${accessToken}`, {
+            const response = await fetch(`/api/submitPreferences?token=${accessToken}`, {
                 headers: {
                     "Content-Type": "application/json"
                 },
